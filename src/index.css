@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'BlackHanSans'; /* 사용할 폰트의 이름을 정의 */
+  src: url('./fonts/BlackHanSans-Regular.ttf'); /* 폰트 파일의 위치 */
+}
+
+@font-face {
+  font-family: 'MangoByeolbyeol';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-3@1.1/MangoByeolbyeol.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}

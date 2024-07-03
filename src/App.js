@@ -1,8 +1,19 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
+import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 function App() {
-  return <Button variant="contained">Hello World</Button>;
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<SignIn/>}></Route>
+          <Route path="/SignUp" element={<SignUp/>}></Route>
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
 }
 
 export default App;

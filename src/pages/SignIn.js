@@ -12,14 +12,17 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+
+// Firebase 초기화는 따로 설정 파일에서 해주세요
+import app from '../firebaseConfig';
 
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="<https://mui.com/>">
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
@@ -33,19 +36,28 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 function SignIn() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email');
+    const password = data.get('password');
+
+    const auth = getAuth(app);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("DashBoard")
+      // 로그인 성공 후 리디렉션 등 추가 작업
+    } catch (error) {
+      console.error('Error signing in:', error);
+      // 에러 처리
+    }
   };
+
   const navigate = useNavigate();
-  
-function CheckAcount(){
-  navigate("/SignUp");
-}
+
+  function CheckAcount() {
+    navigate("/SignUp");
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -95,7 +107,6 @@ function CheckAcount(){
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={CheckAcount}
             >
               Sign In
             </Button>
@@ -106,7 +117,7 @@ function CheckAcount(){
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" onClick={CheckAcount}>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

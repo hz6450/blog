@@ -13,43 +13,60 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // 리엑트 라우팅 라이브러리
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import app from '../firebaseConfig';
 
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
+const auth = getAuth(app); // 파이어베이스 기본설정
 
 const defaultTheme = createTheme();
 
-
-
-
 export default function SignUp() {
   const navigate = useNavigate();
-  
-function CheckAcount(){
-  navigate("/DashBoard");
-}
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+  const [firstName, setFirstName] = React.useState('');
+  const [lastName, setLastName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [receiveEmails, setReceiveEmails] = React.useState(false);
+
+  const handleFirstNameChange = (event) => {
+    setFirstName(event.target.value);
   };
+
+  const handleLastNameChange = (event) => {
+    setLastName(event.target.value);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleCheckboxChange = (event) => {
+    setReceiveEmails(event.target.checked);
+  };
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const createdUser = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log(createdUser);
+      // 회원가입 성공 후 추가 작업 수행
+      navigate('/'); // 예시: 로그인 페이지로 리디렉션
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -69,7 +86,7 @@ function CheckAcount(){
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -80,6 +97,8 @@ function CheckAcount(){
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  value={firstName}
+                  onChange={handleFirstNameChange}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -90,6 +109,8 @@ function CheckAcount(){
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  value={lastName}
+                  onChange={handleLastNameChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -100,6 +121,8 @@ function CheckAcount(){
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  value={email}
+                  onChange={handleEmailChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -111,11 +134,18 @@ function CheckAcount(){
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  control={<Checkbox 
+                            checked={receiveEmails} 
+                            onChange={handleCheckboxChange} 
+                            value="allowExtraEmails" 
+                            color="primary" 
+                          />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
@@ -125,7 +155,6 @@ function CheckAcount(){
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={CheckAcount}
             >
               Sign Up
             </Button>
@@ -138,7 +167,6 @@ function CheckAcount(){
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

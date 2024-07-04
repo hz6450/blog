@@ -13,10 +13,14 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { useNavigate } from "react-router-dom"; // 리엑트 라우팅 라이브러리
+
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import app from '../firebaseConfig';
-
 const auth = getAuth(app); // 파이어베이스 기본설정
 
 const defaultTheme = createTheme();
@@ -24,19 +28,16 @@ const defaultTheme = createTheme();
 export default function SignUp() {
   const navigate = useNavigate();
 
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
   const [email, setEmail] = React.useState('');
+  const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [receiveEmails, setReceiveEmails] = React.useState(false);
+  const [birth, setBirth] = React.useState();
 
-  const handleFirstNameChange = (event) => {
-    setFirstName(event.target.value);
+  const handleNameChange = (event) => {
+    setName(event.target.value);
   };
 
-  const handleLastNameChange = (event) => {
-    setLastName(event.target.value);
-  };
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -50,6 +51,8 @@ export default function SignUp() {
     setReceiveEmails(event.target.checked);
   };
 
+
+
   const onSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -58,15 +61,18 @@ export default function SignUp() {
         email,
         password
       );
-      console.log(createdUser);
-      // 회원가입 성공 후 추가 작업 수행
+
       navigate('/'); // 예시: 로그인 페이지로 리디렉션
     } catch (error) {
       console.error(error);
     }
   };
 
-  
+
+  function CheckAcount() {
+    navigate("/SignIn");
+  }
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -83,34 +89,26 @@ export default function SignUp() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
+          <Typography class='title' component="h1" variant="h5">
+            회원가입
           </Typography>
           <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  value={firstName}
-                  onChange={handleFirstNameChange}
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker value={birth} onChange={(newValue) => setBirth(newValue)} />
+                </LocalizationProvider>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
+                  id="Name"
+                  label="Name"
+                  name="Name"
                   autoComplete="family-name"
-                  value={lastName}
-                  onChange={handleLastNameChange}
+                  value={name}
+                  onChange={handleNameChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -140,12 +138,12 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
-                  control={<Checkbox 
-                            checked={receiveEmails} 
-                            onChange={handleCheckboxChange} 
-                            value="allowExtraEmails" 
-                            color="primary" 
-                          />}
+                  control={<Checkbox
+                    checked={receiveEmails}
+                    onChange={handleCheckboxChange}
+                    value="allowExtraEmails"
+                    color="primary"
+                  />}
                   label="I want to receive inspiration, marketing promotions and updates via email."
                 />
               </Grid>
@@ -160,8 +158,8 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
+                <Link href="#" variant="body2" onClick={CheckAcount}>
+                  {"이미 계정이 존재하나요?"}
                 </Link>
               </Grid>
             </Grid>

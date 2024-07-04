@@ -77,7 +77,7 @@ function SignIn() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography class="LoginText" component="h1" variant="h5">
+          <Typography class="Title" component="h1" variant="h5">
             로그인
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -121,7 +121,7 @@ function SignIn() {
               </Grid>
               <Grid item>
                 <Link href="#" variant="body2" onClick={CheckAcount}>
-                  {"Don't have an account? Sign Up"}
+                  {"계정이 없으신가요? 회원가입"}
                 </Link>
               </Grid>
             </Grid>

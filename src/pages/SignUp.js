@@ -13,17 +13,20 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { collection, addDoc } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import app from '../firebaseConfig';
-const auth = getAuth(app); // 파이어베이스 기본설정
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth, firestore } from '../firebaseConfig'
 
 const defaultTheme = createTheme();
+
+const db = firestore(); // db를 firestore()로 설정합니다.
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -32,12 +35,11 @@ export default function SignUp() {
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [receiveEmails, setReceiveEmails] = React.useState(false);
-  const [birth, setBirth] = React.useState();
+  const [birth, setBirth] = React.useState(null); // birth를 초기값으로 null로 설정합니다.
 
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
-
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -51,28 +53,54 @@ export default function SignUp() {
     setReceiveEmails(event.target.checked);
   };
 
-
-
-  const onSubmit = async (event) => {
-    event.preventDefault();
+  const onRegister = async () => {
     try {
-      const createdUser = await createUserWithEmailAndPassword(
+      // Create user with email and password
+      const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
 
-      navigate('/'); // 예시: 로그인 페이지로 리디렉션
-    } catch (error) {
-      console.error(error);
+      const user = userCredential.user;
+
+      // Convert birth from Day.js object to Firestore Timestamp object
+      const birthTimestamp = birth ? Timestamp.fromDate(new Date(birth.year(), birth.month(), birth.date())) : null;
+
+      // Save additional user data to Firestore
+      await addDoc(collection(db, 'users'), {
+        uid: user.uid,
+        email: email,
+        username: name,
+        birth: birthTimestamp, // Use the Firestore Timestamp object
+      });
+
+      // 저장이 성공하면 성공 alert를 사용자에게 보여줍니다.
+      alert('회원가입에 성공하셨습니다. 로그인 해주세요.');
+
+      // navigate('/'); // Redirect to login page
+    } catch (err) {
+      switch (err.code) {
+        case 'auth/invalid-email':
+          alert('이메일을 바르게 입력해주세요.');
+          break;
+        case 'auth/weak-password':
+          alert('비밀번호가 너무 쉬워요.');
+          break;
+        case 'auth/email-already-in-use':
+          alert('등록된 이메일 입니다.');
+          break;
+        default:
+          alert('회원가입 실패');
+          console.log(err);
+          break;
+      }
     }
   };
-
 
   function CheckAcount() {
     navigate("/SignIn");
   }
-
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -92,11 +120,15 @@ export default function SignUp() {
           <Typography class='title' component="h1" variant="h5">
             회원가입
           </Typography>
-          <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker value={birth} onChange={(newValue) => setBirth(newValue)} />
+                  <DatePicker
+                    value={birth}
+                    onChange={(newValue) => setBirth(newValue)}
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                  />
                 </LocalizationProvider>
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -149,10 +181,10 @@ export default function SignUp() {
               </Grid>
             </Grid>
             <Button
-              type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={onRegister}
             >
               Sign Up
             </Button>

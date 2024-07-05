@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +20,7 @@ import './SignIn.css';
 
 
 // Firebase 초기화는 따로 설정 파일에서 해주세요
-import app from '../firebaseConfig';
+import { app } from '../firebaseConfig';
 
 function Copyright(props) {
   return (
@@ -49,7 +50,6 @@ function SignIn() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("DashBoard")
-      // 로그인 성공 후 리디렉션 등 추가 작업
     } catch (error) {
       console.error('Error signing in:', error);
       // 에러 처리
@@ -86,7 +86,7 @@ function SignIn() {
               required
               fullWidth
               id="email"
-              label="Email Address"
+              label="이메일 입력"
               name="email"
               autoComplete="email"
               autoFocus
@@ -96,13 +96,14 @@ function SignIn() {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="비밀번호 입력"
               type="password"
               id="password"
               autoComplete="current-password"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
+              align="left"
               label="Remember me"
             />
             <Button
@@ -111,12 +112,12 @@ function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              로그인 하기
             </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
-                  Forgot password?
+                  비밀번호 분실
                 </Link>
               </Grid>
               <Grid item>

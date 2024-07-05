@@ -5,6 +5,8 @@ import SignUp from "./pages/SignUp";
 import DashBoard from "./pages/dashboard/DashBoard";
 import TicTacTo from "./pages/tictacto";
 
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -14,7 +16,7 @@ function App() {
           <Route path="/SignIn" element={<SignIn/>}></Route>
           <Route path="/SignUp" element={<SignUp/>}></Route>
           <Route path="/DashBoard" element={<DashBoard/>}></Route>
-          <Route path="/TicTacTo" element={<TicTacTo/>}></Route>
+          <Route path="/TicTacTo" element={<TicTacTo/>}></Route>s
         </Routes>
       </div>
     </BrowserRouter>

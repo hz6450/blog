@@ -1,15 +1,21 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-import Title from './Title';
+import { useNavigate } from "react-router-dom";
 import './Deposits.css';
+
+import TicTacto from "../../assets/TicTacTo.png"
 
 
 
 export default function Deposits() {
+  const navigate = useNavigate();
+function TicTacTo() {
+
+  navigate("/TicTacTo");
+}
   return (
     <React.Fragment>
-      <h1 class="Title">오늘의 운세</h1>
+      <h1 class="Title">게임하러가기</h1>
+        <img src={TicTacto} onClick={TicTacTo} ></img>
     </React.Fragment>
   );
 }

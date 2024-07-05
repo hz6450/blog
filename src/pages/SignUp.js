@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -34,7 +32,6 @@ export default function SignUp() {
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [receiveEmails, setReceiveEmails] = React.useState(false);
   const [birth, setBirth] = React.useState(null); // birth를 초기값으로 null로 설정합니다.
 
   const handleNameChange = (event) => {
@@ -49,9 +46,6 @@ export default function SignUp() {
     setPassword(event.target.value);
   };
 
-  const handleCheckboxChange = (event) => {
-    setReceiveEmails(event.target.checked);
-  };
 
   const onRegister = async () => {
     try {
@@ -78,7 +72,7 @@ export default function SignUp() {
       // 저장이 성공하면 성공 alert를 사용자에게 보여줍니다.
       alert('회원가입에 성공하셨습니다. 로그인 해주세요.');
 
-      // navigate('/'); // Redirect to login page
+      navigate('/'); // Redirect to login page
     } catch (err) {
       switch (err.code) {
         case 'auth/invalid-email':

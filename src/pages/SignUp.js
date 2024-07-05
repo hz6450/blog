@@ -136,7 +136,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="Name"
-                  label="Name"
+                  label="이름"
                   name="Name"
                   autoComplete="family-name"
                   value={name}
@@ -148,7 +148,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="이메일 주소"
                   name="email"
                   autoComplete="email"
                   value={email}
@@ -160,7 +160,7 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="비밀번호"
                   type="password"
                   id="password"
                   autoComplete="new-password"
@@ -168,17 +168,7 @@ export default function SignUp() {
                   onChange={handlePasswordChange}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox
-                    checked={receiveEmails}
-                    onChange={handleCheckboxChange}
-                    value="allowExtraEmails"
-                    color="primary"
-                  />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
+             
             </Grid>
             <Button
               fullWidth

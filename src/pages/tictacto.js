@@ -1,4 +1,11 @@
 import { useState } from 'react';
+import Sidebar from './dashboard/Sidebar';
+
+import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 
 import "./tictacto.css"
 
@@ -34,6 +41,7 @@ function Board({ xIsNext, squares, onPlay }) {
 
   return (
     <>
+
       <div className="status">{status}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
@@ -70,7 +78,7 @@ export default function Game() {
     if (currentMove === nextMove) {
       return;
     }
-    
+
     setCurrentMove(nextMove);
   }
 
@@ -88,15 +96,42 @@ export default function Game() {
     );
   });
 
+  const defaultTheme = createTheme();
+
   return (
-    <div className="game">
-      <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
-      </div>
-      <div className="game-info">
-        <ol>{moves}</ol>
-      </div>
-    </div>
+<>
+  <ThemeProvider theme={defaultTheme} >
+    <Box sx={{ display: 'flex' }}>
+      <Sidebar />
+      <CssBaseline />
+      <Box
+        component="main"
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'light'
+              ? theme.palette.grey[100]
+              : theme.palette.grey[900],
+          flexGrow: 1,
+          height: '100vh',
+          overflow: 'auto',
+        }}
+      >
+        <Container maxWidth="lg" sx={{ m : 30}}>
+          <div className="game">
+            <div className="game-board">
+              <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+            </div>
+            <div className="game-info">
+              <ol>{moves}</ol>
+            </div>
+          </div>
+        </Container>
+      </Box>
+    </Box>
+  </ThemeProvider>
+</>
+
+  
   );
 }
 

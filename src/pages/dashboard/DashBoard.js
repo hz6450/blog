@@ -11,7 +11,9 @@ import Link from '@mui/material/Link';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import Notice from '../notice/Notice';
 import Sidebar from './Sidebar'
+
 
 function Copyright(props) {
   return (
@@ -83,7 +85,7 @@ export default function Dashboard() {
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
+                  <Notice />
                 </Paper>
               </Grid>
             </Grid>

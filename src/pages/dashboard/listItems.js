@@ -4,8 +4,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import LayersIcon from '@mui/icons-material/Layers';
 import { Link } from "react-router-dom";
 
@@ -24,17 +24,17 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="games" />
     </ListItemButton>
-        <ListItemButton component={Link} to="/Dashboard">
+        <ListItemButton component={Link} to="/Calendar">
       <ListItemIcon>
-        <PeopleIcon />
+        <EditCalendarIcon />
       </ListItemIcon>
-      <ListItemText primary="Customers" />
+      <ListItemText primary="Calendar" />
     </ListItemButton>
-        <ListItemButton component={Link} to="/Dashboard">
+        <ListItemButton component={Link} to="/Notice">
       <ListItemIcon>
-        <BarChartIcon />
+        <ContentPasteIcon />
       </ListItemIcon>
-      <ListItemText primary="Reports" />
+      <ListItemText primary="Notice" />
     </ListItemButton>
         <ListItemButton component={Link} to="/Dashboard">
       <ListItemIcon>

@@ -6,83 +6,55 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from '../dashboard/Title';
 import Button from '@mui/material/Button';
-
 import { Link } from "react-router-dom";
+import { collection, getDocs } from 'firebase/firestore';
+import { firestore } from '../../firebaseConfig';
 
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
+const db = firestore();
 
-const rows = [
-  createData(
-    0,
-    '16 Mar, 2019',
-    'Elvis Presley',
-    'Tupelo, MS',
-    'VISA ⠀•••• 3719',
-    312.44,
-  ),
-  createData(
-    1,
-    '16 Mar, 2019',
-    'Paul McCartney',
-    'London, UK',
-    'VISA ⠀•••• 2574',
-    866.99,
-  ),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(
-    3,
-    '16 Mar, 2019',
-    'Michael Jackson',
-    'Gary, IN',
-    'AMEX ⠀•••• 2000',
-    654.39,
-  ),
-  createData(
-    4,
-    '15 Mar, 2019',
-    'Bruce Springsteen',
-    'Long Branch, NJ',
-    'VISA ⠀•••• 5919',
-    212.79,
-  ),
-];
+export default function Notice() {
+  const [notices, setNotices] = React.useState([]); // State to hold the notices data
 
-export default function Orders() {
+  React.useEffect(() => {
+    async function fetchData() {
+      const querySnapshot = await getDocs(collection(db, "notice"));
+      const fetchedNotices = [];
+      querySnapshot.forEach((doc) => {
+        // Extract data from each document
+        const { name, title,  timestamp } = doc.data();
+        // Push into fetchedNotices array
+        fetchedNotices.push({ name, title,  timestamp });
+      });
+      // Set the state with fetched notices
+      setNotices(fetchedNotices);
+    }
+    fetchData(); // Call fetchData() when component mounts
+  }, []);
+
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title>Recent Notices</Title>
       <div align="right">
-      <Button variant="contained" component={Link} to="/NoticeGenerate">글쓰기</Button>
+        <Button variant="contained" component={Link} to="/NoticeGenerate">글쓰기</Button>
       </div>
       <Table size="small">
         <TableHead>
           <TableRow>
-
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell>이름</TableCell>
+            <TableCell>제목</TableCell>
+            <TableCell>작성시간</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}> 
-              <TableCell >{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{`$${row.amount}`}</TableCell>
+          {notices.map((notice, index) => (
+            <TableRow key={index} component={Link} to="/NoticeDetail">
+              <TableCell>{notice.name}</TableCell>
+              <TableCell>{notice.title}</TableCell>
+              <TableCell>{notice.timestamp.toDate().toLocaleString()}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <Link color="primary" component={Link} to="/NoticeDetail" sx={{ mt: 3 }}>
-        See more orders
-      </Link>
     </React.Fragment>
   );
 }

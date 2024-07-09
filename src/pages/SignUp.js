@@ -11,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { collection, addDoc } from 'firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -20,11 +19,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, firestore } from '../firebaseConfig'
+import { auth, firestore, setDoc, doc } from '../firebaseConfig'
+
 
 const defaultTheme = createTheme();
-
 const db = firestore(); // db를 firestore()로 설정합니다.
+
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ export default function SignUp() {
       const birthTimestamp = birth ? Timestamp.fromDate(new Date(birth.year(), birth.month(), birth.date())) : null;
 
       // Save additional user data to Firestore
-      await addDoc(collection(db, 'users'), {
+      await setDoc(doc(db, 'users', auth.currentUser.uid), {
         uid: user.uid,
         email: email,
         username: name,

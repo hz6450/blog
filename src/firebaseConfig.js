@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection } from "firebase/firestore"; 
+import { getFirestore, collection, setDoc, doc } from "firebase/firestore"; 
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -19,3 +19,4 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const firestore = () => getFirestore(app); // firestore 함수를 export 합니다.
 export const USER_COLLECTION = collection(db, "users");
+export {setDoc, doc}
